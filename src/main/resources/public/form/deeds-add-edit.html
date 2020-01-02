@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		
+		<link rel="stylesheet" type="text/css" href="../layui/css/layui.css">
+
+		<script src="../layui/layui.js"></script>
+		<script src="../js/common.js"></script>
+		<script src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
+		<script src="https://cdn.bootcss.com/vue/2.6.7/vue.min.js"></script>
+	</head>
+	<body>
+		<div class="layui-card-body" id="app">
+			<div class="layui-tab-content">
+				<div class="layui-card">
+					<div class="layui-form">
+						
+						<div class="layui-form-item">
+							<label class="layui-form-label" style="width: 100px;">标题：</label>
+							<div class="layui-input-block">
+							  <input style="width: 400px;"  type="text" v-model="title" name="title" id="title" required  lay-verify="required" autocomplete="off" class="layui-input">
+							</div>
+						</div>
+						
+						<div class="layui-form-item">
+							<label class="layui-form-label" style="width: 100px;">事件时间</label>
+							<div class="layui-input-block">
+							  <input style="width: 400px;"  type="text" v-model="deedsDate"  name="deedsDate" id="deedsDate" required  lay-verify="required" autocomplete="off" class="layui-input">
+							</div>
+						</div>
+						
+						<div class="layui-form-item">
+							<label class="layui-form-label" style="width: 100px;">内容：</label>
+							<div class="layui-input-block">
+							  <textarea  style="width: 400px;" name="content" v-model="content" id="content" class="layui-textarea"></textarea>
+							</div>
+						</div>
+						 
+						<div class="layui-form-item layui-hide">
+							<input type="button" lay-submit lay-filter="confirm" id="confirm" value="确认">
+							<input type="button" lay-submit lay-filter="qx" id="qx" value="取消">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<script type="text/javascript">
+			var vue = new Vue({
+				el:"#app",
+				data:{
+					title:null,
+					content:null,
+					deedsDate:null
+				},
+				created() {
+					console.log(window.location.search);
+					this.title = getQueryString("title");
+					this.content = getQueryString("content");
+					this.deedsDate = getQueryString("deedsDate");
+
+				},
+				mounted() {
+					layui.use(['form', 'laydate'], function(){
+						var form = layui.form;
+						var laydate = layui.laydate;
+
+						laydate.render({
+							elem: '#deedsDate'
+							,done: function(value, date, endDate){
+								vue.deedsDate = value;
+							}
+						});
+
+						form.on("submit(confirm)", function(){
+							var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+							parent.layer.close(index); //再执行关闭
+						});
+					});
+				},
+				
+			});
+			
+
+		</script>
+	</body>
+</html>

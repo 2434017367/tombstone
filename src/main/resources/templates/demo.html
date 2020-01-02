@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+
+    <#include "/header.html">
+    <style>
+        .xk{
+            -webkit-box-shadow:0px 4px 4px #c8c8c8 ;
+            -moz-box-shadow:0px 4px 4px #c8c8c8 ;
+            box-shadow:0px 4px 4px #c8c8c8 ;
+            background-color: white;
+            padding-bottom: 20px;
+
+        }
+        .text{
+            font-size: 20px;
+            font-family: "Open Sans";
+        }
+
+        .content{
+            font-size: 16px;
+            font-family: "Helvetica Neue";
+        }
+
+        .title{
+            font-size: 20px;
+            font-weight: bold;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+
+        .sj-title{
+            font-size: 18px;
+            color: black;
+            margin-bottom: 5px;
+            font-family: sans-serif;
+        }
+
+        .comment-date{
+            font-family: "Microsoft Yahei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            color: rgb(153, 153, 153);
+            font-size: 13px;
+            margin-right: 10px
+        }
+
+        .comment-content{
+            font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "PingFang SC", "Microsoft YaHei", "Source Han Sans SC", "Noto Sans CJK SC", "WenQuanYi Micro Hei", sans-serif;
+            font-size: 16px;
+            color: rgb(26, 26, 26);
+            margin-top: 5px;
+        }
+
+    </style>
+</head>
+
+<body style="background-color: rgb(246, 246, 246); " >
+
+<!--<p style="display: none" id="getId">${id}</p>-->
+
+<div class="layui-container" id="app" style="margin-bottom: 30px;">
+    <div class="layui-row" style="margin-top: 20px; margin-bottom: 10px">
+        <div class="layui-col-md8 layui-col-md-offset2 xk" >
+            <div class="layui-row">
+                <div class="layui-col-md12">
+                    <div class="layui-row">
+                        <div class="layui-col-md4">
+                            <div style="margin: 50px 0px 0px 80px;">
+                                <img id="image" style="width: 100px; height: 130px" :src="imageUrl + figure.image">
+                            </div>
+                        </div>
+
+                        <div class="layui-col-md8" style="margin-top: 50px">
+                            <div class="layui-row" >
+                                <div class="layui-col-md10">
+                                    <div class="layui-form-item">
+                                        <p class="text" style="font-size: 30px; font-weight: bold">{{figure.name}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-row" >
+                                <div class="layui-col-md10">
+                                    <div class="layui-form-item">
+                                        <p class="text">{{figure.title}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-row" >
+                                <div class="layui-col-md10">
+                                    <div class="layui-form-item">
+                                        <div class="layui-inline">
+                                            <p class="text">{{figure.birthDate + " ~ " + figure.deathDate}}</p>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-col-md12" style="margin-top: 20px">
+
+                    <fieldset class="layui-elem-field">
+                        <legend ><span class="title">简介</span></legend>
+                        <div class="layui-field-box">
+                            <p class="content">{{figure.content}}</p>
+                        </div>
+                    </fieldset>
+                </div>
+
+                <div class="layui-col-md12" style="margin-top: 20px">
+                    <fieldset class="layui-elem-field layui-field-title">
+                        <legend><span class="title">平生事迹</span></legend>
+                    </fieldset>
+                </div>
+
+                <div class="layui-col-md10" style="margin-top: 10px; margin-left: 10px">
+                    <ul class="layui-timeline">
+                        <template v-for="(deeds,index) in figure.deedsList">
+                            <li class="layui-timeline-item">
+                                <i class="layui-icon layui-timeline-axis" @click="editOrdel(index)">&#xe63f;</i>
+                                <div class="layui-timeline-content layui-text">
+                                    <h3 class="layui-timeline-title">{{deeds.deedsDate}}</h3>
+                                    <p class="sj-title">
+                                        {{deeds.title}}
+                                    </p>
+                                    <p>
+                                        {{deeds.content}}
+                                    </p>
+                                </div>
+                            </li>
+                        </template>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-row">
+        <div class="layui-col-md8 layui-col-md-offset2 xk">
+            <div class="layui-row" v-for="item in figure.commentList">
+                <div class="layui-col-md12 ">
+                    <div style="margin: 10px 0px 0px 10px">
+                        <p class="comment-date">{{item.createDate}}</p>
+                        <p class="comment-content">{{item.name + ": " + item.content}}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row">
+                <div class="layui-col-md1 layui-col-md-offset11">
+                    <button class="layui-btn layui-btn-normal layui-btn-sm" style="margin-top: 10px" @click="comment">评论</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    var id = "${id}";
+    var vue = new Vue({
+        el:"#app",
+        data:{
+            figure:{
+                id:null,
+                name:null,
+                title:null,
+                content:null,
+                birthDate:null,
+                deathDate:null,
+                image:null,
+                deedsList:[],
+                commentList:[]
+
+            },
+            imageUrl: baseURL + "getImage/"
+        },
+        created() {
+
+            $.get(baseURL + "api/figure/info", {id: id}, function (data) {
+                if (data.code === 0){
+                    vue.figure = data.data;
+                    document.title = data.data.name;
+                }
+            });
+
+
+        },
+        mounted(){
+            layui.use('layer', function(){
+                var layer = layui.layer;
+            });
+        },
+        methods:{
+            comment:function () {
+                layer.open({
+                    type: 2,
+                    title: '新增',
+                    content: baseURL + 'form/comment.html?id=' + id,
+                    maxmin: true,
+                    area: ['500px', '400px'],
+                    btn: ['确认', '取消'],
+                    yes: function(index, layero) {
+
+                        var name = layero.find('iframe').contents().find("#name").val();
+                        var content = layero.find('iframe').contents().find("#content").val();
+
+                        var obj = {name:name,content:content,figureId:id};
+
+                        //点击确认触发 iframe 内容中的按钮提交
+                        var submit = layero.find('iframe').contents().find("#confirm");
+                        submit.click();
+
+                        $.post(baseURL + "api/comment/comment", obj, function (data) {
+                           if (data.code === 0){
+                               layer.msg("评论成功,等待审核", {icon:1,time:1000});
+
+                           }
+                        });
+
+
+                    }
+                });
+            }
+        }
+    });
+
+</script>
+
+</body>
+</html>

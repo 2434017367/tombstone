@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>主页</title>
+
+    <#include "/header.html">
+</head>
+<body>
+
+    <ul class="layui-nav" lay-filter="">
+        <li class="layui-nav-item">欢迎管理员</li>
+        <li class="layui-nav-item"><a href="${request.contextPath}/outLogin">退出登录</a></li>
+        <!--<li class="layui-nav-item layui-this"><a href="">产品</a></li>-->
+        <!--<li class="layui-nav-item"><a href="">大数据</a></li>-->
+        <!--<li class="layui-nav-item">-->
+            <!--<a href="javascript:;">解决方案</a>-->
+            <!--<dl class="layui-nav-child"> &lt;!&ndash; 二级菜单 &ndash;&gt;-->
+                <!--<dd><a href="">移动模块</a></dd>-->
+                <!--<dd><a href="">后台模版</a></dd>-->
+                <!--<dd><a href="">电商平台</a></dd>-->
+            <!--</dl>-->
+        <!--</li>-->
+        <!--<li class="layui-nav-item layui-layout-left"><a href="">社区</a></li>-->
+    </ul>
+
+   <div class="layui-container" style="margin-top: 60px">
+       <div class="layui-row">
+           <div class="layui-col-md12">
+               <div class="layui-row layui-form">
+                   <div class="layui-col-md6">
+                       <div class="layui-input-inline">
+                           <input type="text" name="name"  placeholder="姓名" autocomplete="off" class="layui-input">
+                       </div>
+                       <div class="layui-input-inline">
+                           <select class="layui-select" name="status">
+                               <option value="">状态</option>
+                               <option value="0">正常</option>
+                               <option value="1">禁用</option>
+                           </select>
+                       </div>
+                   </div>
+
+                   <div class="layui-col-md3 layui-col-md-offset3">
+                       <div class="layui-form-item">
+                           <div class="layui-input-block">
+                               <button class="layui-btn" lay-submit lay-filter="query">查询</button>
+                               <button class="layui-btn layui-btn-normal" lay-submit lay-filter="add">添加</button>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+           </div>
+       </div>
+       <div class="layui-row">
+           <div class="layui-col-md12">
+               <table id="page" lay-filter="table"></table>
+
+               <script type="text/html" id="link">
+                    <button id="copyLink" class="layui-btn layui-btn-normal layui-btn-sm" lay-event="copyLink" data-clipboard-text="">复制链接</button>
+               </script>
+
+               <script type="text/html" id="cz">
+                   <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="edit">编辑</button>
+                   {{# if(d.status == 0){ }}
+                        <button class="layui-btn layui-btn-warm layui-btn-sm" lay-event="disable">禁用</button>
+                   {{# }else{ }}
+                        <button class="layui-btn layui-btn-sm" lay-event="start">开启</button>
+                   {{# }}}
+                   <button class="layui-btn layui-btn-danger layui-btn-sm" lay-event="delete">删除</button>
+               </script>
+
+               <script type="text/html" id="commentList">
+                   <button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="commentList" >查看评论</button>
+               </script>
+
+               <script type="text/html" id="status">
+                   {{# if(d.status == 0){ }}
+                        <div style="display: flex; justify-content: center; align-items: center">
+                            <div style="width: 5px; height: 15px; background-color: #5FB878; border-radius: 20%; margin-right: 3px"></div></di><span>正常</span>
+                        </div>
+                        <!--<span>正常</span>-->
+                   {{# }else{ }}
+                       <div style="display: flex; justify-content: center; align-items: center">
+                           <div style="width: 5px; height: 15px; background-color: #FFB800; border-radius: 20%; margin-right: 3px"></div></di><span>禁用</span>
+                       </div>
+                        <!--<span>禁用</span>-->
+                   {{# } }}
+               </script>
+
+           </div>
+       </div>
+   </div>
+
+
+   <script>
+
+
+       var path = "${request.contextPath}";
+
+       layui.use(['table', 'form', 'element'], function(){
+           var table = layui.table;
+           var form = layui.form;
+           var element = layui.element;
+
+           //第一个实例
+           var tableInts =  table.render({
+               elem: '#page'
+               ,height: 400
+               ,url:  "api/figure/queryPage" //数据接口
+               ,cols: [[ //表头
+
+                   {
+                       field: 'name',
+                       title: '姓名',
+                       width:80
+                   },
+                   {
+                       field: 'title',
+                       title: '墓志铭',
+
+                   },
+                   {
+
+                       field: 'content',
+                       title: '简介',
+                       width: 300
+                   },
+                   {
+
+                       title: '简介',
+                       width: 200,
+                       templet: function (d) {
+                            return d.birthDate + " ~ " + d.deathDate;
+                       }
+                   },
+                   {
+                       title: '状态',
+                       width: 80,
+                       align: "center",
+                       toolbar: "#status"
+                   },
+                   {
+                       title: '评论列表',
+                       width: 100,
+                       align: "center",
+                       toolbar: '#commentList'
+                   },
+                   {
+                       field: 'id',
+                       title: '链接',
+                       width: 100,
+                       align: "center",
+                       toolbar: '#link'
+                   },
+                   {
+                       title: '操作',
+                       width: 200,
+                       align: "center",
+                       toolbar: '#cz',
+                   },
+
+               ]]
+               ,page: true //开启分页
+               ,limit:10
+               ,limits:[30,60,90]
+               ,text: {
+                   none: '暂无相关数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+               }
+               ,skin:"line"
+           });
+
+           //双击
+           table.on('rowDouble(table)', function(obj){
+               console.log("double")
+               var id = obj.data.id;
+               window.location.href =  "demo/" + id;
+           });
+
+           form.on("submit(add)", function (data) {
+               console.log("dddd")
+               window.location.href =  "form/add.html";
+           });
+
+           form.on("submit(query)", function (data) {
+                var name = data.field.name;
+                var status = data.field.status;
+               tableInts.reload({
+                   where:{
+                       name: name,
+                       status: status
+                   }
+               })
+           });
+
+           //监听工具条
+           table.on('tool(table)', function(obj){ //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+               var data = obj.data; //获得当前行数据
+               var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+               var tr = obj.tr; //获得当前行 tr 的 DOM 对象（如果有的话）
+
+               if(layEvent === 'copyLink'){ //复制链接
+                   // layer.msg(data.id);
+                   console.log(path);
+                   $("#copyLink").attr("data-clipboard-text", "https://www.zenghy.top/tom/demo/" + data.id);
+                   var clipboard = new ClipboardJS('#copyLink');
+                   clipboard.on('success', function(e) {
+                       layer.msg("复制成功");
+                       clipboard.destroy();  //解决多次弹窗
+                       e.clearSelection();
+                   });
+               }else if(layEvent === 'edit'){
+                   window.location.href =  "form/add.html?id="+data.id;
+               }else if(layEvent === 'delete'){
+                   layer.confirm("是否要删除姓名为: " + data.name + " 的这条记录！", {
+                       time: 3000, //20s后自动关闭
+                       btn: ['删除', '取消'],
+                       yes:function () {
+                           $.post( "api/figure/delete/" + data.id,{_method:"DELETE"}, function (data) {
+                               if (data.code === 0){
+                                   layer.msg("删除成功", {icon: 1,time:1000});
+                                   tableInts.reload({
+                                       where:{
+                                           name: name,
+                                           status: status
+                                       }
+                                   })
+                               }
+                           });
+                       }
+                   });
+
+               }else if(layEvent === 'disable'){
+                   $.post( "api/figure/updateStatus",{id: data.id, status: 1}, function (data) {
+                       if (data.code === 0){
+                           layer.msg("禁用成功", {icon: 1,time:1000});
+                           tableInts.reload({
+                               where:{
+                                   name: name,
+                                   status: status
+                               }
+                           })
+                       }
+                   });
+               }else if(layEvent === 'start'){
+                   $.post( "api/figure/updateStatus",{id: data.id, status: 0}, function (data) {
+                       if (data.code === 0){
+                           layer.msg("开启成功", {icon: 1,time:1000});
+                           tableInts.reload({
+                               where:{
+                                   name: name,
+                                   status: status
+                               }
+                           })
+                       }
+                   });
+               }else if (layEvent === 'commentList') {
+                   window.location.href =  "commentList/" + data.id;
+               }
+           });
+
+
+       });
+   </script>
+
+</body>
+</html>

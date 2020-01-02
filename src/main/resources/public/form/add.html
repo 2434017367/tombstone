@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <link rel="stylesheet" type="text/css" href="../layui/css/layui.css">
+
+    <script src="../layui/layui.js"></script>
+    <script src="../js/common.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/vue/2.6.7/vue.min.js"></script>
+
+    <style>
+        .xk{
+            -webkit-box-shadow:0px 4px 4px #c8c8c8 ;
+            -moz-box-shadow:0px 4px 4px #c8c8c8 ;
+            box-shadow:0px 4px 4px #c8c8c8 ;
+            background-color: white;
+            padding-bottom: 20px;
+
+        }
+        .return-btn{
+            width: 40px;
+            height: 40px;
+            border: 1px solid rgb(180, 180, 180);
+            border-radius: 100%;
+            -webkit-box-shadow:0px 4px 4px #c8c8c8 ;
+            -moz-box-shadow:0px 4px 4px #c8c8c8 ;
+            box-shadow:0px 4px 4px #c8c8c8;
+            /*background-color: #00FFFF;*/
+            /*margin: 50px 0px 0px 50px;*/
+            position: relative;
+            left: 50px;
+            top: 50px;
+            text-align: center;
+            line-height: 40px;
+            color: rgb(200, 200, 200);
+            font-size: 30px;
+        }
+
+        .text{
+            font-size: 20px;
+            font-family: "Open Sans";
+        }
+
+        .content{
+            font-size: 16px;
+            font-family: "Helvetica Neue";
+        }
+
+        .title{
+            font-size: 20px;
+            font-weight: bold;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+
+        .sj-title{
+            font-size: 18px;
+            color: black;
+            margin-bottom: 5px;
+            font-family: sans-serif;
+        }
+
+    </style>
+</head>
+<body style="background-color: rgb(246, 246, 246); " >
+
+<div class="return-btn" id="toMain" >
+    <span><</span>
+</div>
+
+<div class="layui-container layui-form" id="app" style="margin-bottom: 30px;">
+   <div class="layui-row" style="margin-top: 20px; margin-bottom: 50px">
+       <div class="layui-col-md8 layui-col-md-offset2 xk" >
+           <div class="layui-row">
+               <div class="layui-col-md12">
+                   <div class="layui-row">
+                       <div class="layui-col-md4">
+                           <div style="margin: 50px 0px 0px 80px;">
+                               <img v-show="!demo" id="image" style="width: 100px; height: 130px" :src="imageUrl + figure.image">
+                               <img v-show="demo"  style="width: 100px; height: 130px" :src="imageUrl + figure.image">
+                           </div>
+                       </div>
+
+                       <div class="layui-col-md8" style="margin-top: 50px">
+                            <div class="layui-row" >
+                                <div class="layui-col-md10">
+                                    <div class="layui-form-item">
+
+                                        <input v-show="!demo" type="text" name="name" v-model="figure.name" required  lay-verify="required" placeholder="请输入姓名" autocomplete="off" class="layui-input" >
+                                        <p v-show="demo" class="text" style="font-size: 30px; font-weight: bold">{{figure.name}}</p>
+
+                                    </div>
+                                </div>
+                            </div>
+                           <div class="layui-row" >
+                               <div class="layui-col-md10">
+                                   <div class="layui-form-item">
+
+                                       <input v-show="!demo" type="text" name="title" v-model="figure.title"  placeholder="请输入墓志铭" autocomplete="off" class="layui-input" >
+                                       <p v-show="demo" class="text">{{figure.title}}</p>
+
+                                   </div>
+                               </div>
+                           </div>
+                           <div class="layui-row" >
+                               <div class="layui-col-md10">
+                                   <div class="layui-form-item">
+                                       <div class="layui-inline">
+
+                                               <div v-show="!demo" class="layui-input-inline" style="width: 160px;">
+                                                   <input type="text" v-model="figure.birthDate" name="birthDate" id="birthDate" placeholder="请输入出生日期" autocomplete="off" class="layui-input">
+                                               </div>
+                                               <div v-show="!demo" class="layui-form-mid" >-</div>
+                                               <div v-show="!demo" class="layui-input-inline" style="width: 160px;">
+                                                   <input type="text" v-model="figure.deathDate" name="deathDate" id="deathDate" placeholder="请输入逝世日期" autocomplete="off" class="layui-input">
+                                               </div>
+
+                                               <p v-show="demo" class="text">{{figure.birthDate + " ~ " + figure.deathDate}}</p>
+
+                                       </div>
+                                   </div>
+
+                               </div>
+                           </div>
+                           <!--<div class="layui-row" >-->
+                               <!--<div class="layui-col-md10">-->
+                                   <!--<div class="layui-form-item">-->
+                                       <!--&lt;!&ndash;<input type="text" name="name" required  lay-verify="required" placeholder="请输入姓名" autocomplete="off" class="layui-input" >&ndash;&gt;-->
+                                       <!--&lt;!&ndash;<div class="layui-input-block">&ndash;&gt;-->
+                                       <!--&lt;!&ndash;</div>&ndash;&gt;-->
+
+                                   <!--</div>-->
+                               <!--</div>-->
+                           <!--</div>-->
+                       </div>
+                   </div>
+               </div>
+
+               <div class="layui-col-md12" style="margin-top: 20px">
+
+                   <!--<fieldset class="layui-elem-field layui-field-title">-->
+                       <!--<legend>简介</legend>-->
+                       <!--<textarea v-show="!demo"  name="content" v-model="figure.content"  placeholder="请输入简介" class="layui-textarea"></textarea>-->
+
+                       <!--<p v-show="demo">{{figure.content}}</p>-->
+                   <!--</fieldset>-->
+
+                   <fieldset class="layui-elem-field">
+                       <legend ><span class="title">简介</span></legend>
+                       <div class="layui-field-box">
+                           <textarea v-show="!demo"  name="content" v-model="figure.content"  placeholder="请输入简介" class="layui-textarea"></textarea>
+
+                           <p v-show="demo" class="content">{{figure.content}}</p>
+                       </div>
+                   </fieldset>
+               </div>
+
+               <div class="layui-col-md12" style="margin-top: 20px">
+                   <fieldset class="layui-elem-field layui-field-title">
+                       <legend><span class="title">平生事迹</span></legend>
+                   </fieldset>
+               </div>
+
+               <div class="layui-col-md10" style="margin-top: 10px; margin-left: 10px">
+                   <ul class="layui-timeline">
+                       <template v-for="(deeds,index) in figure.deedsList">
+                           <li class="layui-timeline-item">
+                               <i class="layui-icon layui-timeline-axis" @click="editOrdel(index)">&#xe63f;</i>
+                               <div class="layui-timeline-content layui-text">
+                                   <h3 class="layui-timeline-title">{{deeds.deedsDate}}</h3>
+                                   <p class="sj-title">
+                                       {{deeds.title}}
+                                   </p>
+                                   <p>
+                                       {{deeds.content}}
+                                   </p>
+                               </div>
+                           </li>
+                       </template>
+                   </ul>
+               </div>
+
+               <div class="layui-col-md12" style="display:flex; justify-content:center; align-content: center">
+                   <button v-show="!demo" class="layui-btn" :class="{'layui-btn-disabled' : btn.isSave}" @click="addDeeds">添加</button>
+               </div>
+           </div>
+		   
+
+		   
+		</div>
+   </div>
+
+    <div class="layui-row">
+        <div class="layui-col-md3 layui-col-md-offset9">
+            <button class="layui-btn" lay-submit lay-filter="save">保存</button>
+            <button class="layui-btn" lay-submit lay-filter="demo">{{demo ? '编辑' : '预览'}}</button>
+        </div>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    var vue = new Vue({
+       el:"#app",
+       data:{
+           figure:{
+               id:null,
+               name:null,
+               title:null,
+               content:null,
+               birthDate:null,
+               deathDate:null,
+               image:null,
+               deedsList:[]
+           },
+           btn:{
+               isSave:false
+           },
+           save:true,
+           demo:false,
+           imageUrl: baseURL + "getImage/"
+       },
+	   created() {
+           var url = window.location.search;
+           console.log(window.location.search);
+           if(!isBlank(url)){
+               var id = url.substring(url.indexOf("=") + 1, url.length);
+               console.log(id);
+               if (!isBlank(id)){
+                   this.save = false;
+                   this.figure.id = id;
+
+                   // 获取信息
+                   $.get(baseURL + "api/figure/info", {id: id}, function (data) {
+                        if (data.code === 0){
+                            vue.figure = data.data;
+                        }
+                   })
+               }
+           }
+           console.log(this.save);
+           this.layuiInit();
+	   },
+	   mounted() {
+		  
+	   },
+	   watch:{
+		   // "figure.deedsList":function(newVal, oldVal){
+			//    console.log(newVal, oldVal);
+		   // }
+	   },
+	   methods:{
+
+          editOrdel:function(i){
+              if(vue.demo){
+                  return;
+              }
+              layer.confirm("请对这个节点进行一项操作", {
+                  time: 3000, //20s后自动关闭
+                  btn: ['编辑', '删除'],
+                  yes:function () {
+                      var deeds = vue.figure.deedsList[i];
+                      layer.open({
+                          type: 2,
+                          title: '编辑',
+                          content: 'deeds-add-edit.html?content=' + deeds.content + "&title=" + deeds.title + "&deedsDate=" + deeds.deedsDate,
+                          maxmin: true,
+                          area: ['600px', '600px'],
+                          btn: ['确认', '取消'],
+                          yes: function(index, layero) {
+                              console.log(i);
+                              console.log("编辑")
+                              var content = layero.find('iframe').contents().find("#content").val();
+                              var title = layero.find('iframe').contents().find("#title").val();
+                              var deedsDate = layero.find('iframe').contents().find("#deedsDate").val();
+
+                              var obj = {content: content, title: title, deedsDate: deedsDate};
+                              vue.figure.deedsList.splice(i,1, obj);
+
+                              console.log(vue.figure.deedsList);
+
+                              //点击确认触发 iframe 内容中的按钮提交
+                              var submit = layero.find('iframe').contents().find("#confirm");
+                              submit.click();
+                          }
+                      });
+                  },
+                  btn2:function () {
+                      console.log(i)
+                      console.log("删除");
+                      vue.figure.deedsList.splice(i,1);
+                      console.log(vue.figure.deedsList)
+                  }
+              });
+          },
+
+          addDeeds:function(){
+               layer.open({
+                    type: 2,
+                    title: '新增',
+                    content: 'deeds-add-edit.html',
+                    maxmin: true,
+                    area: ['600px', '600px'],
+                    btn: ['确认', '取消'],
+                    yes: function(index, layero) {
+
+                        var content = layero.find('iframe').contents().find("#content").val();
+                        var title = layero.find('iframe').contents().find("#title").val();
+                        var deedsDate = layero.find('iframe').contents().find("#deedsDate").val();
+
+                        var deeds = {content: content, title: title, deedsDate: deedsDate};
+                        vue.figure.deedsList.push(deeds);
+
+                        //点击确认触发 iframe 内容中的按钮提交
+                        var submit = layero.find('iframe').contents().find("#confirm");
+                        submit.click();
+                    }
+               });
+		  },
+		  layuiInit:function () {
+		  	  layui.use(['form', 'laydate', 'upload', 'element'], function(){
+		  		var element = layui.element;
+				var form = layui.form;
+				var laydate = layui.laydate;
+				var upload = layui.upload;
+
+
+				form.on("submit(save)", function (data) {
+
+				    var url = vue.save ? baseURL + "api/figure/add" : baseURL + "api/figure/update";
+
+				    console.log(url)
+
+				    vue.btn.isSave = true;
+				    layer.load(1);
+                    $.ajax({
+                        type: "POST",
+                        url: url,
+                        contentType: "application/json",
+                        data: JSON.stringify(vue.figure),
+                        success: function(r){
+                            if(r.code === 0){
+                                // alert('操作成功', function(){
+                                //     vm.reload();
+                                // });
+                                layer.msg("保存成功",
+                                    {icon:1,
+                                    time:1000,
+                                    end:function () {
+                                        window.location.href = baseURL + "main";
+                                    }}
+                                );
+                            }else{
+                                layer.msg("保存失败：" + r.msg, {icon:1});
+                            }
+                        }
+                    });
+                });
+
+
+				form.on("submit(demo)", function () {
+                    vue.demo = !vue.demo;
+                });
+
+				
+				var insStart = laydate.render({
+				      elem: '#birthDate'
+				      ,done: function(value, date){
+						  vue.figure.birthDate = value;
+				        insEnd.config.min = lay.extend({}, date, {
+				          month: date.month - 1
+				        });
+				        //自动弹出结束日期的选择器
+				       insEnd.config.elem[0].focus();
+				      }
+                });
+
+				//结束日期
+				var insEnd = laydate.render({
+				  elem: '#deathDate'
+				  ,done: function(value, date){
+					  vue.figure.deathDate = value;
+					//更新开始日期的最大日期
+					insStart.config.max = lay.extend({}, date, {
+					  month: date.month - 1
+					});
+				  }
+				});
+
+
+                upload.render({
+                      elem: '#image'
+                      ,auto: false //选择文件后不自动上传
+                      ,choose: function(obj){
+                          //将每次选择的文件追加到文件队列
+                          var files = obj.pushFile();
+
+                          //预读本地文件，如果是多文件，则会遍历。(不支持ie8/9)
+                          obj.preview(function(index, file, result){
+                              vue.figure.image = result;
+                              vue.imageUrl = "";
+
+                              console.log(vue.figure.image);
+                          });
+                      }
+                });
+
+
+
+
+		  	  });
+
+
+          }
+	   }
+        
+    });
+
+    $(function () {
+        $("#toMain").click(function () {
+            window.location.href = baseURL + "main";
+        });
+    });
+
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>评论</title>
+
+    <link rel="stylesheet" type="text/css" href="../layui/css/layui.css">
+
+    <script src="../layui/layui.js"></script>
+    <script src="../js/common.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/vue/2.6.7/vue.min.js"></script>
+</head>
+<body>
+<div class="layui-card-body">
+    <div class="layui-tab-content">
+        <div class="layui-card">
+            <div class="layui-form" id="app">
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">姓名:</label>
+                    <div class="layui-input-block">
+                        <input  type="text" name="name" id="name" placeholder="请输入姓名" required  lay-verify="required" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">内容:</label>
+                    <div class="layui-input-block">
+                        <textarea type="text" name="content" id="content" placeholder="请输入内容" required  lay-verify="required" autocomplete="off" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+
+                <div class="layui-form-item layui-hide">
+                    <input type="button" lay-submit lay-filter="confirm" id="confirm" value="确认">
+                    <input type="button" lay-submit lay-filter="qx" id="qx" value="取消">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+
+
+
+    layui.use(['form'], function(){
+        var form = layui.form;
+
+        form.on("submit(confirm)", function(data){
+
+            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+            parent.layer.close(index); //再执行关闭
+
+        });
+
+    });
+
+
+</script>
+</body>
+</html>
